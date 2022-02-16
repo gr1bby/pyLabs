@@ -1,11 +1,11 @@
-def findDif(firstDate: str, secondDate: str) -> int:
+def find_dif(first_date: str, second_date: str) -> int:
     # get year part and convert to int
-    firstYear = int(firstDate.split('/')[0]) 
-    secondYear = int(secondDate.split('/')[0])
+    first_year = int(first_date.split('/')[0]) 
+    second_year = int(second_date.split('/')[0])
     # find result and get absolute value
-    return abs(firstYear - secondYear)
+    return abs(first_year - second_year)
 
 
 if __name__ == '__main__':
-    print(findDif('2002/23/10', '2022/2/3'))
-    print(findDif('2022/23/10', '2002/2/3'))
+    print(find_dif('2002/23/10', '2022/2/3'))
+    print(find_dif('2022/23/10', '2002/2/3'))
