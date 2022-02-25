@@ -1,3 +1,6 @@
+from timer import Timer
+
+
 def selection_sort(nums: list) -> None:
     for i in range(0, len(nums) - 1):
         smallest = i
@@ -8,6 +11,9 @@ def selection_sort(nums: list) -> None:
 
 
 if __name__ == '__main__':
-    nums = [5, 3, 6, 18, 19, 2]
+    nums = [3, 17, 2, 16, 23, 4]
+    t = Timer()
+    t.start()
     selection_sort(nums)
+    t.stop()
     print(nums)

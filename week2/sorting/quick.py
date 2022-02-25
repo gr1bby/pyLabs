@@ -1,3 +1,7 @@
+from sqlite3 import Time
+from timer import Timer
+
+
 def quicksort(alist: list, start: int, end: int) -> None:
     if end - start > 1:
         p = partition(alist, start, end)
@@ -23,6 +27,9 @@ def partition(alist: list, start: int, end: int) -> int:
             return j
  
 if __name__ == '__main__':
-    alist = [5, 11, 5, 3, 0, 12, 9, 16, 3, 27, 4]
+    alist = [3, 17, 2, 16, 23, 4]
+    t = Timer()
+    t.start()
     quicksort(alist, 0, len(alist))
+    t.stop()
     print(alist)

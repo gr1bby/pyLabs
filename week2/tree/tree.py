@@ -23,24 +23,25 @@ class Tree:
     def show_tree(self) -> None:
         print(dict(self.tree))
 
-    def find_node_by_id(self, id: str) -> int:
+    def find_node_by_id(self, id: str) -> dict:
         parent_id, children_id = None, []
         for key, value in self.tree.items():
             if id in value:
                 parent_id = key
 
+        if id == '0':
+            parent_id = None
+
         if id in self.tree.keys():
             children_id = self.tree[id]
 
-        if parent_id:
-            print(f"Node ID is {id},\nParent ID is {parent_id},\nChildren ID is {children_id}")
-            return int(id)
-        elif id == '0':
-            print(f"Node ID is {id},\nIt is head node,\nChildren ID is {children_id}")
-            return int(id)
-        else:
-            print("Node isn't found")
-            return None
+        info_about_node = {
+            'ID': id,
+            'Parent_ID': parent_id,
+            'Children_ID': children_id
+        }
+
+        return info_about_node
 
 
 def csv_parser(file_path: str) -> list:
@@ -52,12 +53,11 @@ def csv_parser(file_path: str) -> list:
             if line_count != 0:
                 list_of_id.append(row)                
             line_count += 1
-
     return list_of_id
 
 
 if __name__ == '__main__':
     tree = Tree(csv_parser('tree2.csv'))
     tree.show_tree()
-    tree.find_node_by_id('1')
+    print(tree.find_node_by_id('0'))
     

@@ -1,3 +1,7 @@
+from sqlite3 import Time
+from timer import Timer
+
+
 def merge_sort(list_of_nums: list) -> None:
     if len(list_of_nums) > 1:
         middle = len(list_of_nums) // 2
@@ -29,6 +33,9 @@ def merge_sort(list_of_nums: list) -> None:
 
 
 if __name__ == '__main__':
-    nums = [3, 1, 6, 9, 0, 15, 12, 23, 16]
+    nums = [3, 17, 2, 16, 23, 4]
+    t = Timer()
+    t.start()
     merge_sort(nums)
+    t.stop()
     print(nums)

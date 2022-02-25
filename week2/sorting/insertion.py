@@ -1,3 +1,5 @@
+from timer import Timer
+
 def insertion_sort(list_of_nums: list) -> None:
     for i in range(1, len(list_of_nums)):
         item_to_insert = list_of_nums[i]
@@ -10,5 +12,8 @@ def insertion_sort(list_of_nums: list) -> None:
 
 if __name__ == '__main__':
     list_of_nums = [3, 17, 2, 16, 23, 4]
+    t = Timer()
+    t.start()
     insertion_sort(list_of_nums)
+    t.stop()
     print(list_of_nums)
