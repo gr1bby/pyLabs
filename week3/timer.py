@@ -5,12 +5,12 @@ class Timer:
     def __init__(self):
         self.__calculated_time = None
 
-
-    def get_time(self):
+    @property
+    def time(self):
         if self.__calculated_time is not None:
             return self.__calculated_time
         else:
-            return "Not calculated"            
+            return None            
 
 
     def __enter__(self):
@@ -18,7 +18,7 @@ class Timer:
         self.start_time = time.perf_counter()
 
     
-    def __exit__(self, *exc_details):
+    def __exit__(self, *exc_details: tuple()):
         self.__calculated_time = time.perf_counter() - self.start_time
 
 
@@ -32,5 +32,5 @@ if __name__ == '__main__':
     timer = Timer()
     with timer:
         just_func()
-    print(timer.get_time())
+    print(timer.time)
     

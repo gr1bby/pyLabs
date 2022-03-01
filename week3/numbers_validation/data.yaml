@@ -1,0 +1,11 @@
+add:
+  max: 40
+  min: 5
+ 
+plus:
+  max: 10
+  min: 2
+ 
+sub:
+  max: 30
+  min: 5

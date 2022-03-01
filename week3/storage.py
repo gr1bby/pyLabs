@@ -1,3 +1,8 @@
+class LockException(Exception):
+    def __str__(self) -> str:
+        return "LockException: Storage is alredy unlocked."
+
+
 class Storage:
 
     def __init__(self):
@@ -9,7 +14,7 @@ class Storage:
         print(self.storage)
 
 
-    def append(self, *args):
+    def append(self, *args: tuple):
         if self.is_appendable:
             for arg in args:
                 self.storage.append(arg)
@@ -27,20 +32,24 @@ class Storage:
 
     def __enter__(self):
         if not self.is_appendable:
-            self.is_appendable = True
-        return self
+            self.unlock()
+            return self
+        else: raise LockException
 
     
-    def __exit__(self, *exc_details):
+    def __exit__(self, *exc_details: tuple):
         self.is_appendable = False
 
 
 if __name__ == '__main__':
-    with Storage() as st:
-        st.append(1, '2', [3, '4'])
-        st.show()
-        st.lock()
-        st.append([1, 2, 3])
-        st.unlock()
-        st.append([1, 2, 3])
-        st.show()
+    try:
+        with Storage() as st:
+            st.append(1, '2', [3, '4'])
+            st.show()
+            st.lock()
+            st.append([1, 2, 3])
+            st.unlock()
+            st.append([1, 2, 3])
+            st.show()
+    except LockException as ex:
+        print(ex)
