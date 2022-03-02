@@ -1,3 +1,7 @@
+from typing import Any, Optional, Tuple, Type
+from types import TracebackType
+
+
 class LockException(Exception):
     def __str__(self) -> str:
         return "LockException: Storage is alredy unlocked."
@@ -14,7 +18,7 @@ class Storage:
         print(self.storage)
 
 
-    def append(self, *args: tuple):
+    def append(self, *args: tuple[Any, ...]):
         if self.is_appendable:
             for arg in args:
                 self.storage.append(arg)
@@ -34,10 +38,16 @@ class Storage:
         if not self.is_appendable:
             self.unlock()
             return self
-        else: raise LockException
+        else:
+            raise LockException()
 
     
-    def __exit__(self, *exc_details: tuple):
+    def __exit__(
+        self,
+        exc_type: Optional[Type[BaseException]],
+        exc_val: Optional[BaseException],
+        exc_tb: Optional[TracebackType]):
+
         self.is_appendable = False
 
 
