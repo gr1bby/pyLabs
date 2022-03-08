@@ -1,10 +1,13 @@
+from typing import Any, Optional
+
+
 class Number:
 
-    def __get__(self, instance, owner):
+    def __get__(self, instance: Optional['UserClass'], owner: type) -> int:
         return instance.first_num + 10
 
 
-class UserClass:
+class UserClass():
     num = Number()
 
     def __init__(self, num1: int, num2: int, values: list):
@@ -13,18 +16,18 @@ class UserClass:
         self.values = values
 
 
-    def __getattribute__(self, item):
+    def __getattribute__(self, item: str) -> Any:
         if item == 'num2':
             raise ValueError("Access is denied")
         else:
             return object.__getattribute__(self, item)
 
 
-    def __getattr__(self, item):
-        print(f"Uncknown attribute '{item}'")
+    def __getattr__(self, item: str) -> str:
+        return f"Uncknown attribute '{item}'"
 
 
-    def __getitem__(self, item: int):
+    def __getitem__(self, item: int) -> Any:
         if 0 <= item < len(self.values):
             return self.values[item]
         else:
@@ -32,7 +35,7 @@ class UserClass:
 
 
     @property
-    def first_num(self):
+    def first_num(self) -> int:
         return self.num1
 
 
@@ -42,3 +45,4 @@ if __name__ == '__main__':
     print(user.num1)
     print(user.values[3])
     print(user.num2)
+    print(user.num3)

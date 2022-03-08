@@ -3,7 +3,7 @@
 """
 
 from dataclasses import dataclass
-from typing import List
+from typing import List, Union
 
 
 @dataclass
@@ -18,10 +18,12 @@ class EducationalInstitution:
         self.__students = students
 
 
-    def __add__(self, other_school):
-        list_of_students = self.__students
+    def __add__(self, other_school: Union['School', 'Gimnasium']) -> 'EducationalInstitution':
+        list_of_students = list()
+        list_of_students.extend(self.__students) 
         list_of_students.extend(other_school.students)
-        return list_of_students
+
+        return EducationalInstitution(list_of_students)
 
 
     @property
@@ -34,8 +36,9 @@ class EducationalInstitution:
         self.__students.append(student)
 
     
-    def add(self, other_school):
-        list_of_students = self.__students
+    def add(self, other_school: Union['School', 'Gimnasium']) -> 'EducationalInstitution':
+        list_of_students = list()
+        list_of_students.extend(self.__students) 
         list_of_students.extend(other_school.students)
 
         return EducationalInstitution(list_of_students)
@@ -46,8 +49,9 @@ class School(EducationalInstitution):
         super().__init__(students)
 
     
-    def __add__(self, other_school):
-        list_of_students = self.__students
+    def __add__(self, other_school: Union['School', 'Gimnasium']) -> Union['Gimnasium', EducationalInstitution]:
+        list_of_students = list()
+        list_of_students.extend(self.__students)
         list_of_students.extend(other_school.students)
 
         if isinstance(other_school, School):
@@ -56,8 +60,9 @@ class School(EducationalInstitution):
         return EducationalInstitution(list_of_students)
 
     
-    def add(self, other_school):
-        list_of_students = self.__students
+    def add(self, other_school: Union['School', 'Gimnasium']) -> Union['Gimnasium', EducationalInstitution]:
+        list_of_students = list()
+        list_of_students.extend(self.__students)
         list_of_students.extend(other_school.students)
 
         if isinstance(other_school, School):
@@ -71,17 +76,9 @@ class Gimnasium(EducationalInstitution):
         super().__init__(students)
     
 
-    def __add__(self, other_school):
-        list_of_students = self.__students
-        list_of_students.extend(other_school.students)
-
-        if isinstance(other_school, Gimnasium):
-            return Gimnasium(list_of_students)
-
-        return EducationalInstitution(list_of_students)
-
-    def add(self, other_school):
-        list_of_students = self.__students
+    def __add__(self, other_school: Union['School', 'Gimnasium']) -> Union['Gimnasium', EducationalInstitution]:
+        list_of_students = list()
+        list_of_students.extend(self.__students)
         list_of_students.extend(other_school.students)
 
         if isinstance(other_school, Gimnasium):
@@ -90,10 +87,12 @@ class Gimnasium(EducationalInstitution):
         return EducationalInstitution(list_of_students)
 
 
-# def add(first_institut: Union[School, Gimnasium],
-#         second_institut: Union[School, Gimnasium]) -> EducationalInstitution:
-    
-#     students = first_institut.students
-#     students.extend(second_institut.students)
-#     # In any situation will return Gimnasium
-#     return Gimnasium(students)
+    def add(self, other_school: Union['School', 'Gimnasium']) -> Union['Gimnasium', EducationalInstitution]:
+        list_of_students = list()
+        list_of_students.extend(self.__students)
+        list_of_students.extend(other_school.students)
+
+        if isinstance(other_school, Gimnasium):
+            return Gimnasium(list_of_students)
+
+        return EducationalInstitution(list_of_students)
