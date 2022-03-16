@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request
 
 
-from calculation import calculate
+from week5.socket_server.calculation import calculate
 
 
 app = Flask(__name__)

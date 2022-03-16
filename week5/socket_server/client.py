@@ -12,12 +12,12 @@ if __name__ == '__main__':
         message = ' '.join(sys.argv[1:])
         data = message.encode()
         client.sendall(data)
-        received_data = client.recv(16).decode()
+        received_data = client.recv(64).decode()
         try:
             result = float(received_data)
             print(f"Received data: {result:.4f}")
         except ValueError:
-            print("Nothing is received")
+            print(received_data)
     finally:
         print("Connection closed.")
         client.close()

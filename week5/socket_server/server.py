@@ -1,31 +1,10 @@
 import socket
-import operator
 from typing import Any
+
+from calculation import calculate
 
 
 HOST, PORT = '127.0.0.1', 4447
-
-
-def send_error(exception: Any) -> str:
-    print(f"{type(exception).__name__}: {exception}")
-    return ''
-
-
-def calculate(data: str) -> str:
-    splited_data = data.split()
-    try:
-        func_name = splited_data[0]
-        num1 = float(splited_data[1])
-        num2 = float(splited_data[2])
-        return str(operator.methodcaller(func_name, num1, num2)(operator))
-    except ValueError as ex:
-        return send_error(ex)
-    except AttributeError as ex:
-        return send_error(ex)
-    except ZeroDivisionError as ex:
-        return send_error(ex)
-    except IndexError as ex:
-        return send_error(ex)
 
 
 if __name__ == '__main__':
@@ -39,7 +18,7 @@ if __name__ == '__main__':
             connection, client_address = server.accept()
             try:
                 print(f"Connected to {client_address}")
-                data = connection.recv(16)
+                data = connection.recv(64)
                 decoded_data = data.decode()
                 if 'stop' in decoded_data or 'quit' in decoded_data:
                     break
