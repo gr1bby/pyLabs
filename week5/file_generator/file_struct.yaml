@@ -1,0 +1,23 @@
+top_dir:
+- sub_dir2: null
+- top_dir_property.json:
+    key1: 1, 2
+    key2:
+    - 1
+    - 2
+    - inner_key: 3
+- sub_dir1:
+  - property2.txt: Have a nice day!
+  - property3.yaml:
+    - 1
+    - 2
+    - 3
+    - 4
+  - property1:
+      key1:
+      - prop1
+      - prop2
+      - 3
+      - key2:
+        - prop4
+        - 5
