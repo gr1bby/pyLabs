@@ -3,20 +3,20 @@ import math
 
 
 FUNCTIONS = {
-    operator: [
+    operator: {
         'add',
         'sub',
         'mul',
         'truediv',
         'mod',
-    ],
+    },
 
-    math: [
+    math: {
         'copysign',
         'fmod',
         'ldexp',
         'pow',
-    ]
+    }
 }
 
 
@@ -26,17 +26,14 @@ def calculate(data: str) -> str:
         func_name = splited_data[0]
         num1 = float(splited_data[1])
         num2 = float(splited_data[2])
+
+        for pkg, funcs in FUNCTIONS.items():
+            if func_name in funcs:
+                return str(operator.methodcaller(func_name, num1, num2)(pkg))
         
-        if func_name in FUNCTIONS[operator]:
-            result = operator.methodcaller(func_name, num1, num2)(operator)
+        # If function isn't found
+        raise AttributeError("No such function.")
 
-        elif func_name in FUNCTIONS[math]:
-            result = operator.methodcaller(func_name, num1, num2)(math)
-
-        else:
-            raise AttributeError("No such function.")
-
-        return str(result)
     except ValueError as ex:
         return f"{type(ex).__name__}: {ex}"
     except AttributeError as ex:
