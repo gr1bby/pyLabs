@@ -1,7 +1,7 @@
 import socket
 from typing import Any
 
-from calculation import calculate
+import MathServer.calculation as calc
 
 
 HOST, PORT = '127.0.0.1', 4447
@@ -22,7 +22,7 @@ if __name__ == '__main__':
                 decoded_data = data.decode()
                 if 'stop' in decoded_data or 'quit' in decoded_data:
                     break
-                result = calculate(decoded_data)
+                result = calc.calculate(decoded_data)
                 connection.sendall(result.encode())
                 print(f"Sended: {result}")
             finally:

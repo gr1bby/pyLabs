@@ -13,7 +13,7 @@ def generate_dict(path: str):
     final_list = list()
 
     for item in items:
-        item_path = path + os.sep + item
+        item_path = os.path.join(path, item)
         if os.path.isdir(item_path):
             final_list.append(
                 {item: generate_dict(item_path)}
@@ -21,14 +21,31 @@ def generate_dict(path: str):
         else:
             with open(item_path, 'r') as file:
                 content = file.read()
-                
-                try: content = json.loads(content)
-                except: ...
 
-                try: content = yaml.safe_load(content)
-                except: ...
+                try:
+                    content = json.loads(content)
+                except json.decoder.JSONDecodeError:
+                    ...
+
+                try:
+                    content = yaml.safe_load(content)
+                except AttributeError:
+                    ...
+
+            if len(item.split('.')) == 2:
+                file_name, file_type = item.split('.')
+            else:
+                file_name = item
+                file_type = None
                     
-            final_list.append({item: content})
+            final_list.append(
+                {
+                    file_name: {
+                        'content': content,
+                        'file_type': file_type,
+                    }
+                }
+            )
     
     return final_list
 

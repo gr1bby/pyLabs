@@ -3,10 +3,13 @@ import sys
 import json
 import yaml
 
+from pprint import pprint
+
 
 def make_dir(dir: dict, path: str = os.getcwd()) -> None:
     for current_item, inner_data in dir.items():
-        path += os.sep + current_item
+        # pprint(f"{current_item}: {inner_data}")
+        path = os.path.join(path, current_item)
         if all((
             any((
                 isinstance(inner_data, list),
@@ -23,14 +26,16 @@ def make_dir(dir: dict, path: str = os.getcwd()) -> None:
                     make_dir(item, path)
 
         else:
+            if inner_data['file_type'] is not None:
+                path = '.'.join([path, inner_data['file_type']])
             with open(path, 'w') as file:
-                match current_item.split('.')[-1]:
+                match inner_data['file_type']:
                     case 'json':
-                        file.write(json.dumps(inner_data, indent=2))
+                        file.write(json.dumps(inner_data['content'], indent=2))
                     case 'yaml' | 'yml':
-                        yaml.dump(inner_data, file, default_flow_style=False)
+                        yaml.dump(inner_data['content'], file, default_flow_style=False)
                     case _:
-                        file.write(str(inner_data))
+                        file.write(str(inner_data['content']))
 
 
 def scan_yaml(path: str) -> dict:
