@@ -20,7 +20,7 @@ FUNCTIONS = {
 }
 
 
-def calculate(data: str) -> str:
+def calculate(data: str) -> dict:
     splited_data = data.split()
     try:
         func_name = splited_data[0]
@@ -29,7 +29,12 @@ def calculate(data: str) -> str:
 
         for pkg, funcs in FUNCTIONS.items():
             if func_name in funcs:
-                return str(operator.methodcaller(func_name, num1, num2)(pkg))
+                return {
+                    'operator': func_name,
+                    'num1': num1,
+                    'num2': num2,
+                    'result': str(operator.methodcaller(func_name, num1, num2)(pkg))
+                }
         
         # If function isn't found
         raise AttributeError("No such function.")
