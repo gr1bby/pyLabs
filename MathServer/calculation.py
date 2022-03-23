@@ -26,7 +26,12 @@ def calculate(data: str) -> dict:
         func_name = splited_data[0]
         num1 = float(splited_data[1])
         num2 = float(splited_data[2])
+    except ValueError as ex:
+        return f"{type(ex).__name__}: {ex}"
+    except IndexError as ex:
+        return f"{type(ex).__name__}: {ex}"
 
+    try:
         for pkg, funcs in FUNCTIONS.items():
             if func_name in funcs:
                 return {
@@ -38,12 +43,7 @@ def calculate(data: str) -> dict:
         
         # If function isn't found
         raise AttributeError("No such function.")
-
-    except ValueError as ex:
-        return f"{type(ex).__name__}: {ex}"
     except AttributeError as ex:
         return f"{type(ex).__name__}: {ex}"
     except ZeroDivisionError as ex:
-        return f"{type(ex).__name__}: {ex}"
-    except IndexError as ex:
         return f"{type(ex).__name__}: {ex}"

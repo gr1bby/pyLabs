@@ -1,5 +1,4 @@
 import socket
-from typing import Any
 
 import MathServer.calculation as calc
 
@@ -22,7 +21,7 @@ if __name__ == '__main__':
                 decoded_data = data.decode()
                 if 'stop' in decoded_data or 'quit' in decoded_data:
                     break
-                result = calc.calculate(decoded_data)
+                result = calc.calculate(decoded_data)['result']
                 connection.sendall(result.encode())
                 print(f"Sended: {result}")
             finally:

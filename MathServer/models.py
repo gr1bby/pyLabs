@@ -1,7 +1,10 @@
 import sqlalchemy as sa
 
+from typing import List
+
 from sqlalchemy import MetaData, create_engine, select
 from sqlalchemy.orm import Session
+from sqlalchemy.orm.query import Query
 from sqlalchemy.engine.base import Engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy_utils import database_exists, create_database
@@ -13,7 +16,7 @@ Base = declarative_base()
 metadata = Base.metadata
 
 
-class UserDatabaseInterphase:
+class UserDatabaseInterfase:
 
     class DataModel(Base):
         __tablename__ = 'expression_data'
@@ -23,6 +26,15 @@ class UserDatabaseInterphase:
         num1 = sa.Column('num1', sa.Numeric())
         num2 = sa.Column('num2', sa.Numeric())
         result = sa.Column('result', sa.Numeric())
+
+
+        def to_dict(self) -> dict:
+            return {
+                'operator': self.operator,
+                'num1': self.num1,
+                'num2': self.num2,
+                'result': self.result,
+            }
 
 
     def __init__(self, user: str, passwd: str, host: str, port: int, db_name: str):
@@ -55,24 +67,18 @@ class UserDatabaseInterphase:
         self.__session.commit()
 
 
-    def get_data(self, op='', limit=0, offset=0):
+    def get_data(self, op='', limit=0, offset=0) -> List[dict]:
         if op:
             data = self.__session.query(self.DataModel).filter(self.DataModel.operator == op)
         else:
             data = self.__session.query(self.DataModel)
+            
         if limit > 0:
             data = data.limit(limit)
         if offset > 0:
             data = data.offset(offset)
-        results = [
-            {
-                'operator': item.operator,
-                'num1': item.num1,
-                'num2': item.num2,
-                'result': item.result,
-            } for item in data.all()]
 
-        pprint(results, sort_dicts=False)
+        return [item.to_dict() for item in data.all()]
 
 
     def create_database(self, name: str):
