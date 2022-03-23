@@ -1,22 +1,19 @@
-from re import template
 from flask import Flask, render_template, request
 from flask_migrate import Migrate
 
-from calculation import calculate
 from models import UserDatabaseInterfase
-from config import postgresql as settings
-# from MathServer.calculation import calculate
-# from MathServer.models import UserDatabaseInterphase
-# from MathServer.config import postgresql as settings
+from calculation import calculate
+
+import config as settings
 
 
 app = Flask(__name__)
 db = UserDatabaseInterfase(
-    settings['pguser'],
-    settings['pgpasswd'],
-    settings['pghost'],
-    settings['pgport'],
-    settings['pgdb']
+    settings.DB_USER,
+    settings.DB_PASS,
+    settings.DB_HOST,
+    settings.DB_PORT,
+    settings.DB_NAME
 )
 migrate = Migrate(app, db)
 
@@ -31,7 +28,7 @@ def get_answer():
     data = calculate(request.form['data'])
     if isinstance(data, dict):
         db.insert_data(data)
-        return 'Success'
+        return data['result']
     else:
         return data
 
@@ -61,4 +58,3 @@ def get_database_by_operator():
 
 if __name__ == '__main__':
     db.create_database('data')
-    app.run()

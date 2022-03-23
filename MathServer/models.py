@@ -2,7 +2,7 @@ import sqlalchemy as sa
 
 from typing import List
 
-from sqlalchemy import MetaData, create_engine, select
+from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.query import Query
 from sqlalchemy.engine.base import Engine
@@ -10,32 +10,30 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy_utils import database_exists, create_database
 
 
-from pprint import pprint
-
 Base = declarative_base()
 metadata = Base.metadata
 
 
+class DataModel(Base):
+    __tablename__ = 'expression_data'
+
+    id = sa.Column('id', sa.Integer(), primary_key=True, autoincrement=True)
+    operator = sa.Column('operator', sa.String(10))
+    num1 = sa.Column('num1', sa.Numeric())
+    num2 = sa.Column('num2', sa.Numeric())
+    result = sa.Column('result', sa.Numeric())
+
+
+    def to_dict(self) -> dict:
+        return {
+            'operator': self.operator,
+            'num1': self.num1,
+            'num2': self.num2,
+            'result': self.result,
+        }
+
+
 class UserDatabaseInterfase:
-
-    class DataModel(Base):
-        __tablename__ = 'expression_data'
-
-        id = sa.Column('id', sa.Integer(), primary_key=True, autoincrement=True)
-        operator = sa.Column('operator', sa.String(10))
-        num1 = sa.Column('num1', sa.Numeric())
-        num2 = sa.Column('num2', sa.Numeric())
-        result = sa.Column('result', sa.Numeric())
-
-
-        def to_dict(self) -> dict:
-            return {
-                'operator': self.operator,
-                'num1': self.num1,
-                'num2': self.num2,
-                'result': self.result,
-            }
-
 
     def __init__(self, user: str, passwd: str, host: str, port: int, db_name: str):
         self.__user = user
@@ -56,7 +54,7 @@ class UserDatabaseInterfase:
 
 
     def insert_data(self, data: dict):
-        new_data = self.DataModel(
+        new_data = DataModel(
             operator = data['operator'],
             num1 = data['num1'],
             num2 = data['num2'],
@@ -69,9 +67,9 @@ class UserDatabaseInterfase:
 
     def get_data(self, op='', limit=0, offset=0) -> List[dict]:
         if op:
-            data = self.__session.query(self.DataModel).filter(self.DataModel.operator == op)
+            data = self.__session.query(DataModel).filter(DataModel.operator == op)
         else:
-            data = self.__session.query(self.DataModel)
+            data = self.__session.query(DataModel)
             
         if limit > 0:
             data = data.limit(limit)
@@ -81,6 +79,6 @@ class UserDatabaseInterfase:
         return [item.to_dict() for item in data.all()]
 
 
-    def create_database(self, name: str):
+    def create_database(self):
         engine = self.__get_engine()
         metadata.create_all(engine)

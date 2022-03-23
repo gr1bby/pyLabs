@@ -1,6 +1,6 @@
 import socket
 
-import MathServer.calculation as calc
+import calculation as calc
 
 
 HOST, PORT = '127.0.0.1', 4447
