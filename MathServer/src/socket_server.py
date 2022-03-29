@@ -3,7 +3,7 @@ import socket
 import calculation as calc
 
 
-HOST, PORT = '127.0.0.1', 4447
+HOST, PORT = '127.0.0.1', 5000
 
 
 if __name__ == '__main__':

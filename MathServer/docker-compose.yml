@@ -1,0 +1,45 @@
+version: '2'
+
+services:
+    http_server:
+        build: ./
+        container_name: http_server
+        command: ./http_server.py
+        restart: always
+        ports:
+            - 5000:5000
+        networks:
+            - default
+        depends_on:
+            - postgres
+
+    socket_server:
+        build: ./
+        container_name: socket_server
+        command: ./socket_server.py
+        restart: always
+        networks:
+            - default
+        depends_on:
+            - postgres
+
+
+    postgres:
+        image: postgres:latest
+        container_name: my-postgres
+        ports:
+            - 5432:5432
+
+        networks:
+            - default
+
+        environment:
+            - POSTGRES_HOST=172.18.0.3
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=1234
+            - POSTGRES_DB=math_data
+
+networks:
+  default:
+    external:
+      name: postgres

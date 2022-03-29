@@ -29,6 +29,6 @@ def upgrade():
 
 
 def downgrade():
-    op.drop_table('expression_data')
-    op.drop_index('op_indx', 'expression_data')
     op.drop_index('res_indx', 'expression_data')
+    op.drop_index('op_indx', 'expression_data')
+    op.drop_table('expression_data')
