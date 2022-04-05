@@ -3,9 +3,10 @@ version: '2'
 services:
     http_server:
         build: ./
-        container_name: http_server
-        command: ./http_server.py
+        command: src/http_server.py
         restart: always
+        environment:
+            PGHOST: postgres
         ports:
             - 5000:5000
         networks:
@@ -15,18 +16,36 @@ services:
 
     socket_server:
         build: ./
-        container_name: socket_server
-        command: ./socket_server.py
+        command: src/socket_server.py
         restart: always
         networks:
             - default
         depends_on:
             - postgres
 
+    module_test:
+        build: ./
+        command: test/test_module.py
+        environment:
+            PGHOST: postgres_test
+        networks:
+            - default
+        depends_on:
+            - postgres_test
+
+    integration_test:
+        build: ./
+        command: test/test_integration.py
+        environment:
+            PGHOST: postgres_test
+        networks:
+            - default
+        depends_on:
+            - postgres_test
+
 
     postgres:
         image: postgres:latest
-        container_name: my-postgres
         ports:
             - 5432:5432
 
@@ -39,7 +58,19 @@ services:
             - POSTGRES_PASSWORD=1234
             - POSTGRES_DB=math_data
 
+    postgres_test:
+        image: postgres:latest
+        ports:
+            - 5433:5433
+
+        networks:
+            - default
+
+        environment:
+            - POSTGRES_HOST=172.18.0.3
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=1234
+            - POSTGRES_DB=test_db
+
 networks:
   default:
-    external:
-      name: postgres

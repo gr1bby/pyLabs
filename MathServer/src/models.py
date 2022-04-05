@@ -81,3 +81,7 @@ class UserDatabaseInterfase:
     def create_database(self):
         engine = self.__get_engine()
         metadata.create_all(engine)
+
+
+    def drop_table(self):
+        DataModel.__table__.drop(self.__engine)

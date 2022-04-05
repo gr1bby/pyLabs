@@ -24,7 +24,7 @@ def calculate(data: str) -> dict:
     splited_data = data.split()
     try:
         func_name, num1, num2 = splited_data
-    except IndexError as ex:
+    except ValueError as ex:
         return f"{type(ex).__name__}: {ex}"
     try:
         num1, num2 = float(num1), float(num2)
@@ -32,8 +32,6 @@ def calculate(data: str) -> dict:
         return f"{type(ex).__name__}: {ex}"
 
     try:
-        
-
         for pkg, funcs in FUNCTIONS.items():
             if func_name in funcs:
                 try:
@@ -44,7 +42,7 @@ def calculate(data: str) -> dict:
                     'operator': func_name,
                     'num1': num1,
                     'num2': num2,
-                    'result': str(result)
+                    'result': result
                 }
 
         # If function isn't found
