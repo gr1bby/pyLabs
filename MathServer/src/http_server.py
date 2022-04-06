@@ -1,6 +1,3 @@
-import sys, os
-sys.path.append(os.path.dirname(os.path.realpath(__file__)))
-
 from flask import Flask, render_template, request
 from flask_migrate import Migrate
 
@@ -9,7 +6,7 @@ import config as settings
 from models import UserDatabaseInterfase
 from calculation import calculate
 
-from config import SERVER_HOST, SERVER_PORT
+from config import SERVER_LOCAL_HOST
 
 
 app = Flask(__name__, template_folder='templates')
@@ -28,7 +25,7 @@ def main():
     return render_template('index.html')
 
 
-@app.route('/answer', methods=['POST', 'GET'])
+@app.route('/answer', methods=['POST'])
 def get_answer():
     data = calculate(request.form['data'])
     if isinstance(data, dict):
@@ -38,12 +35,12 @@ def get_answer():
         return data
 
 
-@app.route('/database', methods=['POST', 'GET'])
+@app.route('/database', methods=['GET'])
 def get_database():
     return render_template('limit_and_offset.html')
 
 
-@app.route('/database/answer', methods=['POST', 'GET'])
+@app.route('/database/answer', methods=['POST'])
 def get_database_by_operator():
     limit = offset = 0
     operator = request.form['operator']
@@ -63,7 +60,7 @@ def get_database_by_operator():
 
 def run_server():
     db.create_database()
-    app.run(host=SERVER_HOST, port=SERVER_PORT)
+    app.run(host=SERVER_LOCAL_HOST)
 
 
 if __name__ == '__main__':
