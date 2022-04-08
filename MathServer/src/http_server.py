@@ -1,3 +1,5 @@
+from concurrent.futures import ProcessPoolExecutor
+
 from flask import Flask, render_template, request
 from flask_migrate import Migrate
 
@@ -27,12 +29,14 @@ def main():
 
 @app.route('/answer', methods=['POST'])
 def get_answer():
-    data = calculate(request.form['data'])
-    if isinstance(data, dict):
-        db.insert_data(data)
-        return str(data['result'])
-    else:
-        return data
+    with ProcessPoolExecutor() as executor:
+        future = executor.submit(calculate, request.form['data'])
+        data = future.result()
+        if isinstance(data, dict):
+            db.insert_data(data)
+            return str(data['result'])
+        else:
+            return data
 
 
 @app.route('/database', methods=['GET'])
