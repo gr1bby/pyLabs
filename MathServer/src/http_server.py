@@ -20,6 +20,7 @@ db = UserDatabaseInterfase(
     settings.DB_NAME
 )
 migrate = Migrate(app, db)
+executor = ProcessPoolExecutor()
 
 
 @app.route('/', methods=['GET'])
@@ -29,7 +30,7 @@ def main():
 
 @app.route('/answer', methods=['POST'])
 def get_answer():
-    with ProcessPoolExecutor() as executor:
+    with executor:
         future = executor.submit(calculate, request.form['data'])
         data = future.result()
         if isinstance(data, dict):
