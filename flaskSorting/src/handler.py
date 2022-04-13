@@ -9,6 +9,7 @@ from sorting import *
 from timer import Timer
 from hashing import hash_list
 
+
 timer = Timer()
 
 
@@ -34,14 +35,15 @@ def handle(sort_method: str, value: List[Any]):
     data_list = defaultdict()
     data_for_db = defaultdict()
     with timer:
-        hashed_unsorted = hash_list(value)
-        data_for_db['unsorted'] = hashed_unsorted
+        data_for_db['unsorted'] = hashed_unsorted = hash_list(value)
+
         if api.db.find_by_hash(hashed_unsorted) is None:
             sorted_seq = sort_data(value, sort_method)
             data_list['sequence'] = data_for_db['sorted'] = sorted_seq
             api.db.insert_data(dict(data_for_db))
         else:
             data_list['sequence'] = api.db.find_by_hash(hashed_unsorted)
+
     data_list['time'] = timer.time
     return data_list
 

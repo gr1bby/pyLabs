@@ -25,16 +25,13 @@ db = DatabaseInterfase(
 executor = ProcessPoolExecutor()
 
 
-@app.route('/api/<string:sort_method>', methods=['POST'])
+@app.route('/sort/<string:sort_method>', methods=['POST'])
 def sorting_api(sort_method: str):
     if request.headers.get('Content-type') == 'application/json':
         response_data = request.get_data()
-        
-        print(type(response_data))
-        
+                
         future = executor.submit(handler.get_sorted_answer, response_data, sort_method)
         data = future.result()
-        # executor.shutdown()
 
         return jsonify(data)
     else:
@@ -44,7 +41,7 @@ def sorting_api(sort_method: str):
 
 def run_server():
     db.create_tables()
-    app.run()
+    app.run(settings.SERVER_LOCAL_HOST)
 
 
 if __name__ == '__main__':

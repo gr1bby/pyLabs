@@ -12,3 +12,5 @@ class Config:
         self.DB_HOST = os.environ.get('PGHOST')
         self.DB_PORT = int(os.environ.get('PGPORT'))
         self.DB_NAME = os.environ.get('PGDB')
+
+        self.SERVER_LOCAL_HOST = '0.0.0.0'
