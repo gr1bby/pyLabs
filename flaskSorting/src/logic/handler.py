@@ -1,13 +1,11 @@
 from collections import defaultdict
 from typing import Any, List
 
-import orjson
-
 import api
 
-from sorting import *
-from timer import Timer
-from hashing import hash_list
+from .sorting import *
+from .timer import Timer
+from .hashing import hash_list
 
 
 timer = Timer()
@@ -42,16 +40,15 @@ def handle(sort_method: str, value: List[Any]):
             data_list['sequence'] = data_for_db['sorted'] = sorted_seq
             api.db.insert_data(dict(data_for_db))
         else:
-            data_list['sequence'] = api.db.find_by_hash(hashed_unsorted)
+            data_list['sequence'] = api.db.find_by_hash(hashed_unsorted)[1:-1]
 
     data_list['time'] = timer.time
     return data_list
 
 
-def get_sorted_answer(response: bytes, sort_method: str) -> dict:
-    data = orjson.loads(response)
-    for key, value in data.items():
+def get_sorted_answer(response: dict, sort_method: str) -> dict:
+    for key, value in response.items():
         data_list = handle(sort_method, value)
-        data[key] = data_list
+        response[key] = data_list
 
-    return data
+    return response

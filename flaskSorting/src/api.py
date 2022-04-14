@@ -1,18 +1,19 @@
-from collections import defaultdict
 from concurrent.futures import ProcessPoolExecutor
+
 from flask import Flask, jsonify, request
 
-from DBInterfase import DatabaseInterfase
-from timer import Timer
-from config import Config
+import config
+import logic.handler as handler
 
-import handler
+from database.db_interfase import DatabaseInterfase
+from logic.timer import Timer
+from logic.json_handler import JSONEncoder, JSONDecoder
 
 
 app = Flask(__name__)
 
 timer = Timer()
-settings = Config()
+settings = config.Config()
 
 db = DatabaseInterfase(
     settings.DB_USER,
@@ -28,20 +29,19 @@ executor = ProcessPoolExecutor()
 @app.route('/sort/<string:sort_method>', methods=['POST'])
 def sorting_api(sort_method: str):
     if request.headers.get('Content-type') == 'application/json':
-        response_data = request.get_data()
-                
+        response_data = request.get_json() 
         future = executor.submit(handler.get_sorted_answer, response_data, sort_method)
         data = future.result()
-
         return jsonify(data)
     else:
-        print(request)
-        return 'not ok'
+        return 'Bad response'
     
 
 def run_server():
+    app.json_decoder = JSONDecoder
+    app.json_encoder = JSONEncoder
     db.create_tables()
-    app.run(settings.SERVER_LOCAL_HOST)
+    app.run(host=settings.SERVER_LOCAL_HOST, port=5050)
 
 
 if __name__ == '__main__':

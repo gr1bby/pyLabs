@@ -1,10 +1,9 @@
-from typing import Any
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from sqlalchemy.engine.base import Engine
 from sqlalchemy_utils import database_exists, create_database
 
-from model import DataModel, Base
+from .model import DataModel, Base
 
 
 class DatabaseInterfase:
@@ -37,16 +36,18 @@ class DatabaseInterfase:
         self.__session.commit()
 
 
-    def find_by_hash(self, _hash: str) -> str | None:
+    def find_by_hash(self, _hash: str) -> list | None:
         data = self.__session.query(DataModel).filter(DataModel.unsorted_seq == _hash).all()
         if data:
             # for value in data:
             #     print(value.to_list())
-            return [item.to_str().split(',') for item in data][0]
+            return [item.to_str() for item in data][0]
         return None
-
 
 
     def create_tables(self):
         Base.metadata.create_all(self.__engine)
 
+
+    def drop_table(self):
+        DataModel.__table__.drop(self.__engine)

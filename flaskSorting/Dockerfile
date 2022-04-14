@@ -1,13 +1,17 @@
 FROM python:3.10
 
-WORKDIR /code
+ARG WORKDIR=/code
+
+WORKDIR ${WORKDIR}
 
 COPY requirements.txt .
 
 RUN pip install -r requirements.txt
 
 COPY src/ src
-COPY tests/ test
+COPY tests/ tests
 COPY .env .
+
+ENV PYTHONPATH=${WORKDIR}/src
 
 ENTRYPOINT [ "python" ]

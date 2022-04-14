@@ -1,10 +1,10 @@
-from hashlib import sha256
+from xxhash import xxh3_64_hexdigest
 from typing import Any, List
 
 
 def hash_list(seq: List[Any]) -> str:
     byte_seq = str(seq).encode()
 
-    _hash = sha256(byte_seq)
+    _hash = xxh3_64_hexdigest(byte_seq)
 
-    return _hash.hexdigest()
+    return _hash
