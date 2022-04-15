@@ -36,11 +36,9 @@ class DatabaseInterfase:
         self.__session.commit()
 
 
-    def find_by_hash(self, _hash: str) -> list | None:
+    def find_by_hash(self, _hash: str) -> str | None:
         data = self.__session.query(DataModel).filter(DataModel.unsorted_seq == _hash).all()
         if data:
-            # for value in data:
-            #     print(value.to_list())
             return [item.to_str() for item in data][0]
         return None
 

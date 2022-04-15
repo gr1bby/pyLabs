@@ -14,3 +14,4 @@ class Config:
         self.DB_NAME = os.environ.get('PGDB')
 
         self.SERVER_LOCAL_HOST = '0.0.0.0'
+        self.SERVER_LOCAL_PORT = 5050

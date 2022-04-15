@@ -3,7 +3,8 @@ version: '2'
 services:
     api:
         build: ./
-        command: -m gunicorn src.api:"run_server()"
+        entrypoint: ["python", "-m"]
+        command: gunicorn src.api:"run_server()"
         restart: always
         environment:
             - PGHOST=postgres

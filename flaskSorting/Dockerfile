@@ -8,6 +8,9 @@ COPY requirements.txt .
 
 RUN pip install -r requirements.txt
 
+COPY alembic/ alembic
+COPY alembic.ini .
+
 COPY src/ src
 COPY tests/ tests
 COPY .env .

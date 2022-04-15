@@ -1,6 +1,7 @@
 from concurrent.futures import ProcessPoolExecutor
 
 from flask import Flask, jsonify, request
+from flask_migrate import Migrate
 
 import config
 import logic.handler as handler
@@ -22,6 +23,7 @@ db = DatabaseInterfase(
     settings.DB_PORT,
     settings.DB_NAME
 )
+migrate = Migrate(app, db)
 
 executor = ProcessPoolExecutor()
 
@@ -41,7 +43,7 @@ def run_server():
     app.json_decoder = JSONDecoder
     app.json_encoder = JSONEncoder
     db.create_tables()
-    app.run(host=settings.SERVER_LOCAL_HOST, port=5050)
+    app.run(host=settings.SERVER_LOCAL_HOST, port=settings.SERVER_LOCAL_PORT)
 
 
 if __name__ == '__main__':
