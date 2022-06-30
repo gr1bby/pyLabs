@@ -1,0 +1,55 @@
+version: '2'
+
+services:
+    api:
+        build: ./
+        entrypoint: ["python", "-m"]
+        command: gunicorn src.api:"run_server()"
+        restart: always
+        environment:
+            - PGHOST=postgres
+        ports:
+            - 5000:5000
+        depends_on:
+            - postgres
+
+    module_test:
+        build: ./
+        command: tests/test_module.py
+        environment:
+            PGHOST: postgres_test
+        depends_on:
+            - postgres_test
+
+    integration_test:
+        build: ./
+        command: tests/test_integration.py
+        environment:
+            PGHOST: postgres_test
+        depends_on:
+            - postgres_test
+
+
+    postgres:
+        image: postgres:latest
+        ports:
+            - 5432:5432
+        
+        environment:
+            - POSTGRES_HOST=172.18.0.3
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=1234
+            - POSTGRES_DB=sorted_data
+
+
+    postgres_test:
+        image: postgres:latest
+        ports:
+            - 5432:5432
+
+        environment:
+            - POSTGRES_HOST=172.18.0.3
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=1234
+            - POSTGRES_DB=test_db
+  
